@@ -1,0 +1,4 @@
+github.com/TRedzepagic/compositelogger v0.0.0-20200326090004-c1d15344ef06 h1:jfG6k4IT1feXO2DjEzJh3Oq1J9ZCWFr/3EIPzR2bcfg=
+github.com/TRedzepagic/compositelogger v0.0.0-20200326090004-c1d15344ef06/go.mod h1:zYOOuEiuCE3hnGOXwPGkoZJ6uDUlKSqys3Z7RKPiHWM=
+github.com/go-sql-driver/mysql v1.5.0 h1:ozyZYNQW3x3HtqT1jira07DN2PArx2v7/mN66gGcHOs=
+github.com/go-sql-driver/mysql v1.5.0/go.mod h1:DCzpHaOWr8IXmIStZouvnhqoel9Qv2LBy8hT2VhHyBg=
