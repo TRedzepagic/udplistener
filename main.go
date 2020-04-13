@@ -65,12 +65,12 @@ func main() {
 		}
 
 		data := []byte("Server reply")
-		log.Info("data: " + string(data))
 
 		_, err = connection.WriteToUDP(data, addr)
 		if err != nil {
 			log.Error(err)
 			return
 		}
+
 	}
 }
