@@ -5,11 +5,16 @@ import (
 	"log/syslog"
 	"net"
 	"os"
-	"strings"
+	"time"
 
 	"github.com/TRedzepagic/compositelogger/logs"
 	_ "github.com/go-sql-driver/mysql"
 )
+
+type msg struct {
+	message   string
+	timestamp string
+}
 
 func main() {
 	// Logger creation
@@ -50,26 +55,21 @@ func main() {
 
 	log.Info("Listening...")
 	defer connection.Close()
-
 	buffer := make([]byte, 1024)
 
 	for {
 		num, addr, err := connection.ReadFromUDP(buffer)
-
-		// Message from client
 		log.Info(addr.String()+" says: ", string(buffer[0:num-1]))
 
-		if strings.TrimSpace(string(buffer[0:num])) == "STOP" {
-			log.Warn("EXITING...")
-			return
-		}
+		StructToSend := msg{message: "This is my reply", timestamp: time.Now().String()}
 
-		data := []byte("Server reply")
+		data2 := []byte("Time : " + StructToSend.timestamp + " " + "Server Reply : " + StructToSend.message)
 
-		_, err = connection.WriteToUDP(data, addr)
+		_, err = connection.WriteToUDP(data2, addr)
 		if err != nil {
 			log.Error(err)
 			return
+
 		}
 
 	}
