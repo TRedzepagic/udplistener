@@ -10,10 +10,10 @@ import (
 )
 
 func timer(log *logs.CompositeLog, connection *net.UDPConn, mapa *map[string]*net.UDPAddr) {
-	ticker := time.NewTicker(5 * time.Second)
+	ticker := time.NewTicker(10 * time.Second)
 	for range ticker.C {
-		datatimer := []byte("Timer Tick! : 5 seconds have elapsed")
-		log.Info("5 SECOND TIMER TRIGGERED ! " + string(datatimer))
+		datatimer := []byte("Timer Tick! : 10 seconds have elapsed")
+		log.Info("10 SECOND TIMER TRIGGERED ! " + string(datatimer))
 		for k, v := range *mapa {
 			_, err := connection.WriteToUDP(datatimer, v)
 			log.Info("Sent timer info to " + k)
