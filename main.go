@@ -1,8 +1,6 @@
 package main
 
 import (
-	"log"
-	"log/syslog"
 	"net"
 	"os"
 	"time"
@@ -11,9 +9,22 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-type msg struct {
-	message   string
-	timestamp string
+func timer(log *logs.CompositeLog, connection *net.UDPConn, mapa *map[string]*net.UDPAddr) {
+	ticker := time.NewTicker(5 * time.Second)
+	for range ticker.C {
+		datatimer := []byte("Timer Tick! : 5 seconds have elapsed")
+		log.Info("5 SECOND TIMER TRIGGERED ! " + string(datatimer))
+		for k, v := range *mapa {
+			_, err := connection.WriteToUDP(datatimer, v)
+			log.Info("Sent timer info to " + k)
+			if err != nil {
+				log.Error(err)
+				return
+			}
+
+		}
+	}
+
 }
 
 func main() {
@@ -25,14 +36,14 @@ func main() {
 	stdoutLog := logs.NewStdLogger()
 	defer stdoutLog.Close()
 
-	systemlogger, _ := logs.NewSysLogger(syslog.LOG_NOTICE, log.LstdFlags)
-
-	databaseLog := logs.NewDBLogger(logs.DatabaseConfiguration())
-	defer databaseLog.Close()
+	// OPTIONAL LOGGERS
+	// systemlogger, _ := logs.NewSysLogger(syslog.LOG_NOTICE, log.LstdFlags)
+	// databaseLog := logs.NewDBLogger(logs.DatabaseConfiguration())
+	// defer databaseLog.Close()
 
 	wantDebug := false
 
-	log := logs.NewCustomLogger(wantDebug, filelogger1, stdoutLog, systemlogger, databaseLog)
+	log := logs.NewCustomLogger(wantDebug, filelogger1, stdoutLog)
 
 	arguments := os.Args
 	if len(arguments) == 1 {
@@ -56,16 +67,15 @@ func main() {
 	log.Info("Listening...")
 	defer connection.Close()
 	buffer := make([]byte, 1024)
-
+	IPAddresses := make(map[string]*net.UDPAddr)
+	go timer(log, connection, &IPAddresses)
 	for {
 		num, addr, err := connection.ReadFromUDP(buffer)
+		IPAddresses[addr.String()] = addr
 		log.Info(addr.String()+" says: ", string(buffer[0:num-1]))
 
-		StructToSend := msg{message: "This is my reply", timestamp: time.Now().String()}
-
-		data2 := []byte("Time : " + StructToSend.timestamp + " " + "Server Reply : " + StructToSend.message)
-
-		_, err = connection.WriteToUDP(data2, addr)
+		data := []byte("SERVER REPLY : HELLO !")
+		_, err = connection.WriteToUDP(data, addr)
 		if err != nil {
 			log.Error(err)
 			return
