@@ -49,4 +49,4 @@ Here we granted all privileges on our "LOGS" table to our user named "compositel
 
 Doing this in tandem with my udp client will open a netcat-like environment for sending messages which the server will display (on its end) and log.
 
-Upon successfully sending a message, the server will respond to the client. Also, every N seconds (can be configured in udplistener) the server will send a timer tick to the client, which will then be logged into a file.
+Upon successfully sending a message, the server will respond to the client. Also, every N seconds (can be configured in udplistener) the server will send a timer tick to the client, which will then be logged into a file, which will then be logged in a file on the clients end.
