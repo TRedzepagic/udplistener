@@ -46,3 +46,7 @@ Then you need to grant the user access to our logging table, or else we will get
 "GRANT ALL PRIVILEGES ON LOGGER.LOGS TO 'compositelogger'@'localhost';"
 ```
 Here we granted all privileges on our "LOGS" table to our user named "compositelogger".
+
+Doing this in tandem with my udp client will open a netcat-like environment for sending messages which the server will display (on its end) and log.
+
+Upon successfully sending a message, the server will respond to the client. Also, every N seconds (can be configured in udplistener) the server will send a timer tick to the client, which will then be logged into a file.
